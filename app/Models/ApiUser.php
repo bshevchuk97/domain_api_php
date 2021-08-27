@@ -2,7 +2,20 @@
 
 namespace App\Models;
 
-class ApiUser
-{
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
+class ApiUser extends Model
+{
+    use HasFactory;
+
+    protected $table = 'users';
+
+    public function domains()
+    {
+        return $this->belongsToMany(Domain::class);
+    }
 }
+
+
+namespace App\Models;
