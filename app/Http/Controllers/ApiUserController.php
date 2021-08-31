@@ -93,7 +93,7 @@ class ApiUserController extends Controller
 
     private static function correctUserCredentials($username, $password_hash): bool
     {
-        return $username != NULL && $password_hash != NULL;
+        return !empty($username) && !empty($password_hash);
     }
 
     private function createUser($username, $password_hash): ApiUser
