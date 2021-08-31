@@ -2,24 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\Helpers\BaseApiException;
 use App\Models\Session;
-use Faker\Provider\Base;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use dateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\ApiUser;
-use Illuminate\Http\Response;
-use phpDocumentor\Reflection\Types\Integer;
-use App\Exceptions\Helpers;
-use App\Exceptions\Helpers\Concrete;
+use Response;
+use Throwable;
+
 
 class ApiUserController extends Controller
 {
-
-
-
     /**
      * Show the form for creating a new resource.
      *
@@ -32,19 +25,19 @@ class ApiUserController extends Controller
         $password_hash = $request->get("password_hash");
 
         if (!self::correctUserCredentials($username, $password_hash))
-            return \Response::json(['error' => 'You must specify both username and password hash'], 401);
+            return Response::json(['error' => 'You must specify both username and password hash'], 401);
         $user = ApiUser::where('username', '=', $username)->first();
 
         if ($user != NULL)
-            return \Response::json(['error' => 'User already exists!'], 401);
+            return Response::json(['error' => 'User already exists!'], 401);
 
         try {
             $new_user = $this->createUser($username, $password_hash);
             $session = $this->createSession($new_user);
 
-            return \Response::json(['session_token' => $session->token]);
-        } catch (\Throwable $e) {
-            return \Response::json(['message' => $e->getMessage()], 401);
+            return Response::json(['session_token' => $session->token]);
+        } catch (Throwable $e) {
+            return Response::json(['message' => $e->getMessage()], 401);
         }
     }
 
@@ -61,17 +54,17 @@ class ApiUserController extends Controller
         $password_hash = $request->get("password_hash");
 
         if (!self::correctUserCredentials($username, $password_hash))
-            return \Response::json(['error' => 'You must specify both username and password hash'], 401);
+            return Response::json(['error' => 'You must specify both username and password hash'], 401);
         $user = ApiUser::where('username', '=', $username)->first();
 
         if ($user == NULL)
-            return \Response::json(['error' => 'User does not exist!'], 401);
+            return Response::json(['error' => 'User does not exist!'], 401);
 
         try {
             $session = $this->createSession($user);
-            return \Response::json(['session_token' => $session->token]);
-        } catch (\Throwable $e) {
-            return \Response::json(['message' => $e->getMessage()], 401);
+            return Response::json(['session_token' => $session->token]);
+        } catch (Throwable $e) {
+            return Response::json(['message' => $e->getMessage()], 401);
         }
     }
 
@@ -117,8 +110,8 @@ class ApiUserController extends Controller
     {
         srand(time());
         $session = new Session();
-        $session->token = md5(strval(mt_rand()) . $user->username);
-        $session->created = new \dateTime();
+        $session->token = md5(mt_rand() . $user->username);
+        $session->created = new dateTime();
         $session->user()->associate($user);
 
         $session->save();
