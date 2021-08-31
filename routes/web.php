@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,16 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::post('/register', function (){
-	return 'register user';
-});
-Route::post('/login', function (){
-	return 'login user';
-});
+
+Route::post('/register', 'ApiUserController@create');
+
+Route::post('/login', 'ApiUserController@show');
 Route::get('/domains', function (){
     return 'all domains on user';
 });
@@ -30,12 +25,14 @@ Route::get('/domain/{name}', function ($name){
     return 'status on ' . $name . ' domain of user';
 });
 Route::post('/domain/{name}', function ($name){
-	return 'created ' . $name . ' domain of user';
+    return 'created ' . $name . ' domain of user';
 });
 Route::put('/domain/{name}', function ($name){
     return  'activated ' . $name . ' domain of user';
 });
 Route::delete('/domain/{name}', function ($name){
+    if($name = 'sola')
+        return response()->abort(401);
     return 'deleted ' . $name . 'domain of user';
 });
 
