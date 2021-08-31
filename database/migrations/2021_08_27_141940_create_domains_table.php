@@ -18,11 +18,11 @@ class CreateDomainsTable extends Migration
             $table->increments('id');
             $table->string('name');
 
-            $table->integer('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");
 
-            $table->integer('status_id');
-            $table->foreign('status_id')->references('id')->on('statuses');
+            $table->integer('status_id')->unsigned();
+            $table->foreign('status_id')->references('id')->on('statuses')->onDelete("cascade");
         });
     }
 
