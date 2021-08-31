@@ -31,8 +31,6 @@ Route::put('/domain/{name}', function ($name){
     return  'activated ' . $name . ' domain of user';
 });
 Route::delete('/domain/{name}', function ($name){
-    if($name = 'sola')
-        return response()->abort(401);
     return 'deleted ' . $name . 'domain of user';
 });
 
