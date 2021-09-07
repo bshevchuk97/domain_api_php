@@ -16,21 +16,11 @@ use App\Http\Controllers;
 
 
 Route::post('/register', 'ApiUserController@create');
-
 Route::post('/login', 'ApiUserController@show');
-Route::get('/domains', function (){
-    return 'all domains on user';
-});
-Route::get('/domain/{name}', function ($name){
-    return 'status on ' . $name . ' domain of user';
-});
-Route::post('/domain/{name}', function ($name){
-    return 'created ' . $name . ' domain of user';
-});
-Route::put('/domain/{name}', function ($name){
-    return  'activated ' . $name . ' domain of user';
-});
-Route::delete('/domain/{name}', function ($name){
-    return 'deleted ' . $name . 'domain of user';
-});
+
+Route::get('/domains', 'DomainController@index');
+Route::get('/domain/{id?}', 'DomainController@show');
+Route::post('/domain/', 'DomainController@create');
+Route::put('/domain/{id?}', 'DomainController@update');
+Route::delete('/domain/{id?}', 'DomainController@delete');
 
