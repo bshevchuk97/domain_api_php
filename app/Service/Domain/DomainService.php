@@ -3,13 +3,13 @@
 namespace App\Service\Domain;
 
 use App\Http\Middleware\SessionProvider;
-use App\Models\ApiUser;
+use App\Models\User;
 use App\Models\Domain;
 use Illuminate\Support\ServiceProvider;
 
 class DomainService
 {
-    private ApiUser $user;
+    private User $user;
     private SessionProvider $sessionProvider;
 
     public function __construct(SessionProvider $sessionProvider) {

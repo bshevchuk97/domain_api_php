@@ -4,7 +4,7 @@ namespace App\Service\User;
 
 use App\Exceptions\UserAlreadyExistsException;
 use App\Exceptions\UserNotFoundException;
-use App\Models\ApiUser;
+use App\Models\User;
 use Cassandra\Exception\AlreadyExistsException;
 use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
 use Illuminate\Container\EntryNotFoundException;
@@ -37,7 +37,7 @@ class UserValidator
 
 
     private function userExists($username, $password_hash): bool {
-        return ApiUser::where(['username'=>$username])->exists();
+        return User::where(['username'=>$username])->exists();
     }
 
 

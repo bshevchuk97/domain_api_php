@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $user_id
  * @property string $created
- * @property-read \App\Models\ApiUser $user
+ * @property-read \App\Models\User $user
  * @method static \Database\Factories\SessionFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Session newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Session newQuery()
@@ -36,7 +36,7 @@ class Session extends Model
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(ApiUser::class);
+        return $this->belongsTo(User::class);
     }
 
     public static function findToken($value): ?Session{
@@ -44,7 +44,7 @@ class Session extends Model
         return $session ? $session->first() : NULL;
     }
 
-    public static function create(ApiUser $user): Session {
+    public static function create(User $user): Session {
         srand(time());
         $session = new Session();
         $session->token = md5(mt_rand() . $user->username);

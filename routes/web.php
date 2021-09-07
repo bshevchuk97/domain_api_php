@@ -15,8 +15,8 @@ use App\Http\Controllers;
 
 
 
-Route::post('/register', 'ApiUserController@create');
-Route::post('/login', 'ApiUserController@show');
+Route::post('/register', 'UserController@create');
+Route::post('/login', 'UserController@show');
 
 Route::get('/domains', 'DomainController@index');
 Route::get('/domain/{id?}', 'DomainController@show');

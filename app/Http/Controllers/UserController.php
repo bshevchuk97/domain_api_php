@@ -8,12 +8,12 @@ use App\Service\User\UserService;
 use dateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\ApiUser;
+use App\Models\User;
 use Response;
 use Throwable;
 
 
-class ApiUserController extends Controller
+class UserController extends Controller
 {
     private UserService $userService;
     private SessionService $sessionService;

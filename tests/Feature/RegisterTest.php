@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\ApiUser;
+use App\Models\User;
 use Tests\TestCase;
 
 class RegisterTest extends TestCase
@@ -44,8 +44,8 @@ class RegisterTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure(['session_token']);
 
-        $user = ApiUser::where(['username' => $newUser, 'password_hash' => $newPassHash])->delete();
-        /*$user = ApiUser::where(['username' => self::$existingUser, 'password_hash' => self::$existingPasswordHash]);*/
+        $user = User::where(['username' => $newUser, 'password_hash' => $newPassHash])->delete();
+        /*$user = User::where(['username' => self::$existingUser, 'password_hash' => self::$existingPasswordHash]);*/
     }
 
     /**

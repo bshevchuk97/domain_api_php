@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-use App\Models\ApiUser;
+use App\Models\User;
 use App\Models\Session;
 use App\Service\Session\SessionValidator;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +20,7 @@ class SessionProvider
         return Session::findToken($sessionToken)->first();
     }
 
-    public function currentUser(): ApiUser {
+    public function currentUser(): User {
         $sessionToken = Route::getCurrentRequest()->bearerToken();
         $user = Session::findToken($sessionToken)->user;
 
@@ -28,7 +28,7 @@ class SessionProvider
     }
 
 
-    public function create(ApiUser $user): Session {
+    public function create(User $user): Session {
         return Session::create($user);
     }
 }

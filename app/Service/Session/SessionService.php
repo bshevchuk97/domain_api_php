@@ -2,7 +2,7 @@
 
 namespace App\Service\Session;
 
-use App\Models\ApiUser;
+use App\Models\User;
 use App\Models\Session;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 
@@ -13,7 +13,7 @@ class SessionService
     }
 
 
-    public function create(ApiUser $user){
+    public function create(User $user){
         return Session::create($user);
     }
 

@@ -6,23 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\ApiUser
+ * App\Models\User
  *
  * @property int $id
  * @property string $username
  * @property string $password_hash
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Domain[] $domains
  * @property-read int|null $domains_count
- * @method static \Database\Factories\ApiUserFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|ApiUser newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ApiUser newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ApiUser query()
- * @method static \Illuminate\Database\Eloquent\Builder|ApiUser whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ApiUser wherePasswordHash($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ApiUser whereUsername($value)
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePasswordHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  * @mixin \Eloquent
  */
-class ApiUser extends Model
+class User extends Model
 {
     protected $table = 'users';
     public $timestamps = false;
@@ -34,8 +34,8 @@ class ApiUser extends Model
         return $this->hasMany(Domain::class, 'user_id');
     }
 
-    public static function create($username, $password_hash): ApiUser {
-        $new_user = new ApiUser();
+    public static function create($username, $password_hash): User {
+        $new_user = new User();
         $new_user->username = $username;
         $new_user->password_hash = $password_hash;
 
@@ -45,12 +45,12 @@ class ApiUser extends Model
         return $new_user;
     }
 
-    public static function getId(ApiUser $user){
-        return ApiUser::whereUsername($user->username)->first()->id;
+    public static function getId(User $user){
+        return User::whereUsername($user->username)->first()->id;
     }
 
     public static function login($username, $password_hash){
-        return ApiUser::where(['username'=>$username, 'password_hash'=>$password_hash])->first();
+        return User::where(['username'=>$username, 'password_hash'=>$password_hash])->first();
     }
 
     public function associateDomain(Domain $domain): bool {
