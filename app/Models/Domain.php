@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Exceptions\StatusAlreadySetException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Phalcon\Storage\Serializer\Json;
 
 /**
  * App\Models\Domain
@@ -29,8 +31,68 @@ class Domain extends Model
     public $timestamps = false;
     use HasFactory;
 
-    public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
+    protected $visible = ['id', 'name', 'status'];
+
+    public function status(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
         return $this->belongsTo(Status::class);
+        //return $this->belongsTo(Status::class);
     }
+
+
+    public function activate(): bool {
+        if($this->status_id == Status::active()) {
+            throw new StatusAlreadySetException("Domain is already activated");
+        }
+
+        $this->status_id = Status::active();
+
+        $this->save();
+        $this->refresh();
+
+        return true;
+    }
+
+
+    public function deactivate(): bool {
+        if($this->status_id == Status::inactive()) {
+            throw new StatusAlreadySetException("Domain is already deactivated");
+        }
+
+        $this->status_id = Status::inactive();
+
+        $this->save();
+        $this->refresh();
+
+        return true;
+    }
+
+
+    public static function getAll($userId): array {
+        return Domain::all()->where('user_id', '=', $userId)->toArray();
+    }
+
+
+    public static function create($userId, $name): Domain {
+        $domain = new Domain();
+        $domain->user_id = $userId;
+        $domain->name = $name;
+        $domain->status_id = 1;
+
+        $domain->save();
+        $domain->refresh();
+
+        return $domain;
+    }
+
+
+    public function toJson($options = 0): string {
+        $jsonString =   '{"id": ' . $this->id . ' ,'
+                      . '"name": "' . $this->name . '" ,'
+                      . '"status": "' . $this->status->name() . '"}';
+        $decoded = json_decode($jsonString);
+
+        return json_encode($decoded);
+    }
+
+
 }
