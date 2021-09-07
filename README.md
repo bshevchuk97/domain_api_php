@@ -28,6 +28,8 @@ __! NOTE - User's password should not be openly transferred! Send a md5-hashed p
 |/domain/{id}|PUT|Bearer:[token]|none|
 |/domain/{id}|DELETE|Bearer:[token]|none|
 
+In order to use routes of this API other than /register and /login you must specify a http header "Authorization: Bearer:[ your_session_token_goes_here ]". There should not be any spaces between a "Bearer" keyword and your actual session token. Session token is retrieved as a response on a successful login attempt.
+
 ## Errors
 
 There are some common errors which may occur during usage of this API:
