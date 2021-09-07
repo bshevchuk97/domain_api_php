@@ -27,9 +27,37 @@ class ApiUser extends Model
     protected $table = 'users';
     public $timestamps = false;
     use HasFactory;
+    protected $visible = ['id', 'username'];
 
     public function domains(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Domain::class);
+        return $this->hasMany(Domain::class, 'user_id');
+    }
+
+    public static function create($username, $password_hash): ApiUser {
+        $new_user = new ApiUser();
+        $new_user->username = $username;
+        $new_user->password_hash = $password_hash;
+
+        $new_user->save();
+        $new_user->refresh();
+
+        return $new_user;
+    }
+
+    public static function getId(ApiUser $user){
+        return ApiUser::whereUsername($user->username)->first()->id;
+    }
+
+    public static function login($username, $password_hash){
+        return ApiUser::where(['username'=>$username, 'password_hash'=>$password_hash])->first();
+    }
+
+    public function associateDomain(Domain $domain): bool {
+        $this->domains()->save($domain);
+        $this->save();
+        $this->refresh();
+
+        return true;
     }
 }
