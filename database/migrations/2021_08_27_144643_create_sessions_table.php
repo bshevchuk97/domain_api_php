@@ -17,7 +17,7 @@ class CreateSessionsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('token');
-            $table->timestamp('created');
+            $table->dateTime('created_time');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
