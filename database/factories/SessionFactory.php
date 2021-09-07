@@ -23,16 +23,7 @@ class SessionFactory extends Factory
     public function definition()
     {
         return [
-            'token'=>$this->faker->md5(),
-            'created'=>$this->faker->dateTime()
+
         ];
     }
-
-    public function withToken($token){
-        return [
-            'token'=>$token
-        ];
-    }
-
-
 }
