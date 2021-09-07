@@ -23,4 +23,30 @@ class Status extends Model
     protected $table = 'statuses';
     public $timestamps = false;
     use HasFactory;
+
+    protected $hidden = ['id'];
+    protected $visible = ['name'];
+
+    private static array $statuses = [1 => 'inactive', 2 => 'active'];
+
+    public static function getStatus(int $statusId){
+        $status = self::$statuses[$statusId];
+
+        if(empty($status))
+            return 'unknown';
+
+        return $status;
+    }
+
+    public static function inactive(){return 1;}
+    public static function active(){return 2;}
+
+    public function name(){
+        return self::getStatus($this->id);
+    }
+
+    public function toJson($options = 0): string {
+        return "" . $this->name;
+    }
 }
+
