@@ -23,11 +23,15 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property string $token
  * @method static \Illuminate\Database\Eloquent\Builder|Session whereToken($value)
+ * @property string $created_time
+ * @method static \Illuminate\Database\Eloquent\Builder|Session whereCreatedTime($value)
  */
 class Session extends Model
 {
     protected $table = 'sessions';
     public $timestamps = false;
+    protected $fillable = ['token', 'created_time'];
+    protected $visible = ['token'];
     use HasFactory;
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
