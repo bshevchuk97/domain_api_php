@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Session;
+use App\Service\Session\SessionService;
+use App\Service\User\UserService;
 use dateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,34 +15,28 @@ use Throwable;
 
 class ApiUserController extends Controller
 {
+    private UserService $userService;
+    private SessionService $sessionService;
+
+    public function __construct(UserService $userService, SessionService $sessionService) {
+        $this->userService = $userService;
+        $this->sessionService = $sessionService;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function create(Request $request): JsonResponse
-    {
-        $username = $request->get("username");
-        $password_hash = $request->get("password_hash");
+    public function create(Request $request): JsonResponse {
+        $user = $this->userService
+                     ->register($request->get('username'),
+                                $request->get('password_hash'));
 
-        if (!self::correctUserCredentials($username, $password_hash))
-            return Response::json(['error' => 'You must specify both username and password hash'], 401);
-        $user = ApiUser::where('username', '=', $username)->first();
-
-        if ($user != NULL)
-            return Response::json(['error' => 'User already exists!'], 401);
-
-        try {
-            $new_user = $this->createUser($username, $password_hash);
-            $session = $this->createSession($new_user);
-
-            return Response::json(['session_token' => $session->token]);
-        } catch (Throwable $e) {
-            return Response::json(['message' => $e->getMessage()], 401);
-        }
+        return Response::json(['session'=>$this->sessionService->create($user)
+                                                               ->token]);
     }
-
 
     /**
      * Display the specified resource.
@@ -48,73 +44,12 @@ class ApiUserController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function show(Request $request): JsonResponse
-    {
-        $username = $request->get("username");
-        $password_hash = $request->get("password_hash");
+    public function show(Request $request): JsonResponse {
+        $user = $this->userService
+                     ->login($request->get('username'),
+                             $request->get('password_hash'));
 
-        if (!self::correctUserCredentials($username, $password_hash))
-            return Response::json(['error' => 'You must specify both username and password hash'], 401);
-        $user = ApiUser::where('username', '=', $username)->first();
-
-        if ($user == NULL)
-            return Response::json(['error' => 'User does not exist!'], 401);
-
-        try {
-            $session = $this->createSession($user);
-            return Response::json(['session_token' => $session->token]);
-        } catch (Throwable $e) {
-            return Response::json(['message' => $e->getMessage()], 401);
-        }
-    }
-
-//      /**
-//     * Update the specified resource in storage.
-//     *
-//     * @param Request $request
-//     * @param int $id
-//     * @return Response
-//     */
-//    public function update(Request $request, $id)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Remove the specified resource from storage.
-//     *
-//     * @param int $id
-//     * @return Response
-//     */
-//    public function destroy($id)
-//    {
-//        //
-//    }
-
-    private static function correctUserCredentials($username, $password_hash): bool
-    {
-        return !empty($username) && !empty($password_hash);
-    }
-
-    private function createUser($username, $password_hash): ApiUser
-    {
-        $new_user = new ApiUser();
-        $new_user->username = $username;
-        $new_user->password_hash = $password_hash;
-
-        $new_user->save();
-        return $new_user;
-    }
-
-    private function createSession($user): Session
-    {
-        srand(time());
-        $session = new Session();
-        $session->token = md5(mt_rand() . $user->username);
-        $session->created = new dateTime();
-        $session->user()->associate($user);
-
-        $session->save();
-        return $session;
+        return Response::json(['session'=>$this->sessionService->create($user)
+                                                               ->token]);
     }
 }
