@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,5 +33,21 @@ class Session extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ApiUser::class);
+    }
+
+    public static function findToken($value): ?Session{
+        $session = Session::all()->where('token','=',$value);
+        return $session ? $session->first() : NULL;
+    }
+
+    public static function create(ApiUser $user): Session {
+        srand(time());
+        $session = new Session();
+        $session->token = md5(mt_rand() . $user->username);
+        $session->created_time = new dateTime();
+        $session->user()->associate($user);
+
+        $session->save();
+        return $session;
     }
 }
