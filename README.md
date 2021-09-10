@@ -1,4 +1,5 @@
 # Domain API
+[![Build Status](https://app.travis-ci.com/bshevchuk97/domain_api_php.svg?branch=master)](https://app.travis-ci.com/bshevchuk97/domain_api_php)
 
 Provides simple a functionality of saving adding certain domains for specific users in order to block their
 accessibility. It's important to acknowledge that this API gives any response in a JSON format.
