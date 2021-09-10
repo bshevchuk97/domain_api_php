@@ -17,3 +17,5 @@ before_script:
   - php artisan migrate
 script:
   - vendor/bin/phpunit
+after_success:
+  - curl -T * ftp://domain-api-php:PqaKcT.shCxB8Vh@files.000webhost.com/
